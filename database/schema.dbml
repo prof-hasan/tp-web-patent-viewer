@@ -1,0 +1,90 @@
+// ======================================================================================
+// Esquema do banco de dados do Patent Viewer.
+// Para visualiza-lo acesse https://dbdiagram.io/d/Patent-Viewer-620ec498485e433543d214f5
+// ======================================================================================
+
+Enum TipoPatente {
+  PATENTE
+  PROGRAMA
+}
+
+Enum StatusPatente {
+  ARQUIVADO
+  EM_ANDAMENTO
+  CONCEDIDO
+}
+
+Table patentes {
+  codigo varchar(255) [not null, pk]
+  nome varchar [not null]
+  data_deposito date [not null]
+  resumo varchar [null]
+  status StatusPatente [not null]
+  tipo TipoPatente [not null]
+  linguagens varchar [null]
+  created_at timestamp [not null, default: `NOW()`]
+  updated_at timestamp [not null, default: `NOW()`]
+  deleted_at timestamp [null]
+}
+
+Table titulares {
+  id_titular int [pk, increment]
+  nome varchar(255) [not null, unique]
+  created_at timestamp [not null, default: `NOW()`]
+  updated_at timestamp [not null, default: `NOW()`]
+  deleted_at timestamp [null]
+}
+
+Table inventores {
+  id_inventor int [pk, increment]
+  nome varchar(255) [not null, unique]
+  created_at timestamp [not null, default: `NOW()`]
+  updated_at timestamp [not null, default: `NOW()`]
+  deleted_at timestamp [null]
+}
+
+Table revistas {
+  num_revista int [not null, pk]
+  data_publicacao date [not null]
+  created_at timestamp [not null, default: `NOW()`]
+  updated_at timestamp [not null, default: `NOW()`]
+  deleted_at timestamp [null]
+}
+
+Table despachos {
+  codigo varchar(255) [not null, pk]
+  titulo varchar [not null]
+  created_at timestamp [not null, default: `NOW()`]
+  updated_at timestamp [not null, default: `NOW()`]
+  deleted_at timestamp [null]
+}
+
+Table despachos_patentes {
+  id_despacho_patente int [pk, increment]
+  codigo_despacho varchar(255) [not null, ref: > despachos.codigo]
+  codigo_patente varchar(255) [not null, ref: > patentes.codigo]
+  num_revista int [not null, ref: > revistas.num_revista]
+  sequencia int [not null]
+  comentario varchar [null]
+  created_at timestamp [not null, default: `NOW()`]
+  updated_at timestamp [not null, default: `NOW()`]
+  deleted_at timestamp [null]
+}
+
+Table titulares_patentes {
+  id_titular_patente int [pk, increment]
+  id_titular int [not null, ref: > titulares.id_titular]
+  codigo_patente varchar(255) [not null, ref: > patentes.codigo]
+  created_at timestamp [not null, default: `NOW()`]
+  updated_at timestamp [not null, default: `NOW()`]
+  deleted_at timestamp [null]
+}
+
+Table inventores_patentes {
+  id_inventor_patente int [pk, increment]
+  id_inventor int [not null, ref: > inventores.id_inventor]
+  codigo_patente varchar(255) [not null, ref: > patentes.codigo]
+  created_at timestamp [not null, default: `NOW()`]
+  updated_at timestamp [not null, default: `NOW()`]
+  deleted_at timestamp [null]
+}
