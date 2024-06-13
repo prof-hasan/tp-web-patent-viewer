@@ -5,7 +5,7 @@
 	"main": "src/index.js",
 	"scripts": {
 		"start": "nodemon src/index.js",
-		"front": "cd front-end && npm start",
+		"front": "cd src/front-end && npm start",
 		"db_create": "sequelize db:create",
 		"db_drop": "sequelize db:drop",
 		"db_migrate": "sequelize db:migrate"

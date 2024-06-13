@@ -5,4 +5,4 @@ node_modules
 public/*
 !public/index.html
 
-database/*.backup
+src/database/*.backup
