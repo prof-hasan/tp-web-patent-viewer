@@ -7,8 +7,8 @@ class Revistas extends Model {
 	 */
 	static associate (models) {
 		Revistas.hasMany(models.DespachosPatentes, { as: "despachosPatentes", foreignKey: "numRevista" });
-		Revistas.belongsToMany(models.Despachos, { as: "despachos", through: models.DespachosPatentes });
-		Revistas.belongsToMany(models.Patentes, { as: "patentes", through: models.DespachosPatentes });
+		Revistas.belongsToMany(models.Despachos, { as: "despachos", through: models.DespachosPatentes, foreignKey: "numRevista" });
+		Revistas.belongsToMany(models.Patentes, { as: "patentes", through: models.DespachosPatentes, foreignKey: "numRevista" });
 	}
 }
 

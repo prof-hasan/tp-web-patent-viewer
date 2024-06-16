@@ -7,7 +7,7 @@ class Inventores extends Model {
 	 */
 	static associate (models) {
 		Inventores.hasMany(models.InventoresPatentes, { as: "inventorPatentes", foreignKey: "idInventor" });
-		Inventores.belongsToMany(models.Patentes, { as: "patentes", through: models.InventoresPatentes });
+		Inventores.belongsToMany(models.Patentes, { as: "patentes", through: models.InventoresPatentes, foreignKey: "idInventor" });
 	}
 }
 

@@ -15,7 +15,7 @@ module.exports = {
 				allowNull: false
 			},
 			data_publicacao: {
-				type: Sequelize.DATE,
+				type: Sequelize.DATEONLY,
 				allowNull: false
 			},
 			created_at: {

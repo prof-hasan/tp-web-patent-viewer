@@ -7,7 +7,7 @@ class Titulares extends Model {
 	 */
 	static associate (models) {
 		Titulares.hasMany(models.TitularesPatentes, { as: "titularPatentes", foreignKey: "idTitular" });
-		Titulares.belongsToMany(models.Patentes, { as: "patentes", through: models.TitularesPatentes });
+		Titulares.belongsToMany(models.Patentes, { as: "patentes", through: models.TitularesPatentes, foreignKey: "idTitular" });
 	}
 }
 

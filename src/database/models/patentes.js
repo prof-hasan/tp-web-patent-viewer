@@ -9,10 +9,10 @@ class Patentes extends Model {
 		Patentes.hasMany(models.DespachosPatentes, { as: "despachosPatente", foreignKey: "codigoPatente" });
 		Patentes.hasMany(models.InventoresPatentes, { as: "inventoresPatente", foreignKey: "codigoPatente" });
 		Patentes.hasMany(models.TitularesPatentes, { as: "titularesPatente", foreignKey: "codigoPatente" });
-		Patentes.belongsToMany(models.Despachos, { as: "despachos", through: models.DespachosPatentes });
-		Patentes.belongsToMany(models.Inventores, { as: "inventores", through: models.InventoresPatentes });
-		Patentes.belongsToMany(models.Titulares, { as: "titulares", through: models.TitularesPatentes });
-		Patentes.belongsToMany(models.Revistas, { as: "revistas", through: models.DespachosPatentes });
+		Patentes.belongsToMany(models.Despachos, { as: "despachos", through: models.DespachosPatentes, foreignKey: "codigoPatente" });
+		Patentes.belongsToMany(models.Inventores, { as: "inventores", through: models.InventoresPatentes, foreignKey: "codigoPatente" });
+		Patentes.belongsToMany(models.Titulares, { as: "titulares", through: models.TitularesPatentes, foreignKey: "codigoPatente" });
+		Patentes.belongsToMany(models.Revistas, { as: "revistas", through: models.DespachosPatentes, foreignKey: "codigoPatente" });
 	}
 }
 

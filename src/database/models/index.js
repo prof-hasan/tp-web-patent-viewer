@@ -1,6 +1,6 @@
 "use strict";
 
-const Sequelize = require("sequelize");
+const { Sequelize } = require("sequelize");
 
 const configs = require("../config/config");
 
@@ -39,6 +39,18 @@ else
 
 const db = {
 	sequelize,
+
+	// Enumerações
+	StatusPatente: {
+		ARQUIVADO: "ARQUIVADO",
+		EM_ANDAMENTO: "EM_ANDAMENTO",
+		CONCEDIDO: "CONCEDIDO"
+	},
+
+	TipoPatente: {
+		PATENTE: "PATENTE",
+		PROGRAMA: "PROGRAMA"
+	},
 
 	// Carrega arquivos de modelos das tabelas
 	DespachosPatentes: initDespachosPatentes(sequelize),
