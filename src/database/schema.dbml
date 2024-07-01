@@ -30,6 +30,7 @@ Table patentes {
 Table titulares {
   id_titular int [pk, increment]
   nome varchar(255) [not null, unique]
+  nome_visualizacao varchar(255) [not null]
   created_at timestamp [not null, default: `NOW()`]
   updated_at timestamp [not null, default: `NOW()`]
   deleted_at timestamp [null]
@@ -38,6 +39,7 @@ Table titulares {
 Table inventores {
   id_inventor int [pk, increment]
   nome varchar(255) [not null, unique]
+  nome_visualizacao varchar(255) [not null]
   created_at timestamp [not null, default: `NOW()`]
   updated_at timestamp [not null, default: `NOW()`]
   deleted_at timestamp [null]

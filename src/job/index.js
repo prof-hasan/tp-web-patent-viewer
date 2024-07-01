@@ -17,10 +17,10 @@ async function sincronizaPatentes () {
 		const patentesExistentes = await patentesCadastradas();
 		const patentesBaixadas = await downloadPatentes();
 
-		const diff = jsonDiff.diff(patentesExistentes, patentesBaixadas, { full: true });
+		const diff = jsonDiff.diff(patentesExistentes, patentesBaixadas.diffFormat, { full: true });
 
 		transaction = await models.sequelize.transaction();
-		const syncPatentes = new SyncPatentes(transaction);
+		const syncPatentes = new SyncPatentes(transaction, patentesBaixadas.namesDict);
 
 		for (const key in diff) {
 			if (key.endsWith("__added")) {

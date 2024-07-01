@@ -5,6 +5,7 @@
 		"concessao",
 		"DATEONLY",
 		"dayjs",
-		"publicacao"
+		"publicacao",
+		"visualizacao"
 	]
 }

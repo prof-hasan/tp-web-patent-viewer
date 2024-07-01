@@ -11,13 +11,15 @@ class SyncPatentes {
 	_inventores;
 	_revistas;
 	_titulares;
+	_namesDict;
 	_transaction;
 
-	constructor (transaction) {
+	constructor (transaction, namesDict) {
 		this._despachos = new SyncDespachos(transaction);
 		this._inventores = new SyncInventores(transaction);
 		this._revistas = new SyncRevistas(transaction);
 		this._titulares = new SyncTitulares(transaction);
+		this._namesDict = namesDict;
 		this._transaction = transaction;
 	}
 
@@ -27,7 +29,7 @@ class SyncPatentes {
 		const despachos = [];
 
 		for (const inventor of patente.inventores) {
-			const idInventor = await this._inventores.findOrCreate(inventor);
+			const idInventor = await this._inventores.findOrCreate(inventor, this._namesDict[inventor]);
 			inventores.push({
 				idInventor,
 				codigoPatente: patente.codigo
@@ -35,7 +37,7 @@ class SyncPatentes {
 		}
 
 		for (const titular of patente.titulares) {
-			const idTitular = await this._titulares.findOrCreate(titular);
+			const idTitular = await this._titulares.findOrCreate(titular, this._namesDict[titular]);
 			titulares.push({
 				idTitular,
 				codigoPatente: patente.codigo
@@ -146,7 +148,7 @@ class SyncPatentes {
 		if (Array.isArray(patente.inventores[0])) {
 			for (const [diff, inventor] of patente.inventores) {
 				if (diff === "+") {
-					const idInventor = await this._inventores.findOrCreate(inventor);
+					const idInventor = await this._inventores.findOrCreate(inventor, this._namesDict[inventor]);
 					inventores.add.push({
 						idInventor,
 						codigoPatente: patente.codigo
@@ -179,7 +181,7 @@ class SyncPatentes {
 		if (Array.isArray(patente.titulares[0])) {
 			for (const [diff, titular] of patente.titulares) {
 				if (diff === "+") {
-					const idTitular = await this._titulares.findOrCreate(titular);
+					const idTitular = await this._titulares.findOrCreate(titular, this._namesDict[titular]);
 					titulares.add.push({
 						idTitular,
 						codigoPatente: patente.codigo

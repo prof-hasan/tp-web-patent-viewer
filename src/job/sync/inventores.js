@@ -34,7 +34,7 @@ class SyncInventores {
 		return this._cache.get(nome);
 	}
 
-	async findOrCreate (nome) {
+	async findOrCreate (nome, nomeVisualizacao) {
 		if (!this._cacheLoaded)
 			await this.loadData();
 
@@ -43,7 +43,7 @@ class SyncInventores {
 			return idInventor;
 
 		const inventor = await models.Inventores.create(
-			{ nome },
+			{ nome, nomeVisualizacao },
 			{ transaction: this._transaction, returning: true }
 		);
 

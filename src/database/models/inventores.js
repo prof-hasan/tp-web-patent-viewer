@@ -27,6 +27,10 @@ function initInventores (sequelize) {
 			type: DataTypes.STRING,
 			allowNull: false,
 			unique: true
+		},
+		nomeVisualizacao: {
+			type: DataTypes.STRING,
+			allowNull: false
 		}
 	}, {
 		sequelize,
