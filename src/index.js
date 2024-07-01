@@ -6,12 +6,14 @@ require("console-stamp")(console, { format: ":date(yyyy-mm-dd HH:MM:ss.l).yellow
 
 const chalk = require("chalk");
 const cors = require("cors");
+const cron = require("node-cron");
 const dayjs = require("dayjs");
 const express = require("express");
 const morgan = require("morgan");
 const path = require("path");
 
 const routes = require("./routes");
+const { sincronizaPatentes } = require("./job");
 
 const app = express();
 app.set("port", process.env.PORT || 3000);
@@ -40,3 +42,7 @@ app.get("/*", (req, res) => {
 app.listen(app.get("port"), () => {
 	console.log("Server is listening at", app.get("port"));
 });
+
+// Cria o job de sincronização de patentes para rodar todos os dias às 02:00:00
+cron.schedule("0 0 2 * * *", sincronizaPatentes);
+sincronizaPatentes();

@@ -6,6 +6,6 @@ module.exports = {
 		password: "root",
 		database: "patent_viewer_dev",
 		dialect: "postgres",
-		logging: true
+		logging: false
 	}
 };
