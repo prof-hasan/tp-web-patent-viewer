@@ -9,10 +9,12 @@ async function patentesCadastradas () {
 		include: [{
 			association: "inventores",
 			attributes: ["nome"],
+			through: { attributes: [] },
 			required: false
 		}, {
 			association: "titulares",
 			attributes: ["nome"],
+			through: { attributes: [] },
 			required: false
 		}, {
 			association: "despachosPatente",

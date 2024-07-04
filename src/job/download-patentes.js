@@ -29,7 +29,7 @@ async function downloadPatentes () {
 			inventores: new Set(),
 			titulares: new Set(),
 			despachos: (patente.despacho || []).map((dp, index) => ({
-				sequencia: index,
+				sequencia: patente.despacho.length - index,
 				comentario: dp.comentario.trim(),
 				despacho: {
 					codigo: dp.codigo.trim(),
