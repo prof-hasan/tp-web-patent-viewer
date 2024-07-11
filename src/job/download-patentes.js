@@ -61,8 +61,8 @@ async function downloadPatentes () {
 		if ("linguagens" in patente)
 			diffFormat[patente.codigo].linguagens = patente.linguagens.join(",").trim();
 
-		for (const dp of (patente.despacho || [])) {
-			const status = obterStatusPorDespacho(dp.codigo);
+		for (const dp of diffFormat[patente.codigo].despachos) {
+			const status = obterStatusPorDespacho(dp.despacho.codigo);
 			if (status)
 				diffFormat[patente.codigo].status = status;
 		}
