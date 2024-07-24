@@ -1,5 +1,6 @@
 {
 	"cSpell.words": [
+		"chronos",
 		"citacoes",
 		"codigo",
 		"comentario",
@@ -8,6 +9,8 @@
 		"dayjs",
 		"periodo",
 		"publicacao",
+		"theming",
+		"toastr",
 		"visualizacao"
 	]
 }
