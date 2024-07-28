@@ -1,0 +1,42 @@
+<header>
+	<nav class="bg-primary navbar navbar-expand-md navbar-dark p-2">
+		<div class="d-flex">
+			<button
+				type="button"
+				class="navbar-toggler pt-2 pb-2 me-2"
+				(click)="isMenuCollapsed = !isMenuCollapsed"
+				aria-controls="menu"
+				[attr.aria-expanded]="!isMenuCollapsed"
+				aria-label="Abrir menu"
+			>
+				<mat-icon fontIcon="menu"></mat-icon>
+			</button>
+
+			<div>
+				<a class="navbar-brand" [routerLink]="['/']" title="Visualizador de Patentes">
+					<img src="../../../assets/logo.png" class="ms-3 me-1">
+				</a>
+			</div>
+		</div>
+
+		<div class="navbar-collapse justify-content-between" id="menu" [collapse]="isMenuCollapsed" [isAnimated]="true">
+			<ul class="navbar-nav me-auto mb-0 d-sm-flex">
+				<li class="nav-item">
+					<a class="nav-link" [routerLinkActive]="'active'" [routerLink]="['/statistics']">
+						Início
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" [routerLinkActive]="'active'" [routerLink]="['/search-patents']">
+						Patentes
+					</a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" [routerLinkActive]="'active'" [routerLink]="['/search-softwares']">
+						Programas de Computador
+					</a>
+				</li>
+			</ul>
+		</div>
+	</nav>
+</header>
