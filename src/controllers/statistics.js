@@ -115,7 +115,9 @@ class Statistics {
 				{ type: models.sequelize.QueryTypes.SELECT }
 			);
 
+			let ranking = 1;
 			for (const row of results) {
+				row.ranking = ranking++;
 				row.citacoes = Number(row.citacoes);
 				row.qtdPatentes = Number(row.qtdPatentes);
 				row.qtdProgramas = Number(row.qtdProgramas);
@@ -150,7 +152,9 @@ class Statistics {
 				{ type: models.sequelize.QueryTypes.SELECT }
 			);
 
+			let ranking = 1;
 			for (const row of results) {
+				row.ranking = ranking++;
 				row.citacoes = Number(row.citacoes);
 				row.qtdPatentes = Number(row.qtdPatentes);
 				row.qtdProgramas = Number(row.qtdProgramas);

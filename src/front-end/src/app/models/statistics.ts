@@ -19,6 +19,7 @@ export interface IRequests {
 }
 
 export interface ITopRanking {
+	ranking: number;
 	nomeVisualizacao: string;
 	citacoes: number;
 	qtdPatentes: number;

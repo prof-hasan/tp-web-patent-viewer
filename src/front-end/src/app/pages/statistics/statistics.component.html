@@ -1,11 +1,32 @@
+<ng-template #citacoes let-data="adtData">
+	<div>
+		<a href="">{{ data.qtdPatentes }} {{ data.qtdPatentes === 1 ? "patente" : "patentes" }}</a> e
+		<a href="">{{ data.qtdProgramas }} {{ data.qtdProgramas === 1 ? "programa" : "programas" }}</a>
+	</div>
+</ng-template>
+
 <div class="container">
 	<app-panel class="d-block mb-3" title="Estatísticas">
 	</app-panel>
 
 	<app-panel class="d-block mb-3" title="Principais Titulares">
+		<table
+			#holdersTable
+			datatable
+			[dtOptions]="dtOptionsHolders!"
+			[dtTrigger]="dtTriggerHolders"
+			class="w-100 row-border table table-bordered"
+		></table>
 	</app-panel>
 
 	<app-panel class="d-block mb-3" title="Principais Criadores e Inventores">
+		<table
+			#inventorsTable
+			datatable
+			[dtOptions]="dtOptionsInventors!"
+			[dtTrigger]="dtTriggerInventors"
+			class="w-100 row-border table table-bordered"
+		></table>
 	</app-panel>
 
 	<app-panel class="d-block mb-3" title="Solicitações Mais Recentes">

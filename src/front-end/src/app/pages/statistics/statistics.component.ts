@@ -1,15 +1,18 @@
 import { HttpErrorResponse } from "@angular/common/http";
-import { Component, OnInit } from "@angular/core";
+import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 
+import { ADTSettings } from "angular-datatables/src/models/settings";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
+import { DataTableDirective, DataTablesModule } from "angular-datatables";
 
-import { catchError, finalize, forkJoin, Observable, of, tap } from "rxjs";
+import { catchError, finalize, forkJoin, Observable, of, Subject, tap } from "rxjs";
 
 import { PanelComponent } from "../../components/panel/panel.component";
 
 import { IRecentRequest, IStatistics, ITopRanking } from "../../models/statistics";
 
 import { AlertsService } from "../../services/alerts/alerts.service";
+import { DtTranslationService } from "../../services/dt-translation/dt-translation.service";
 import { StatisticsService } from "../../services/statistics/statistics.service";
 import { TitleService } from "../../services/title/title.service";
 
@@ -17,14 +20,29 @@ import { TitleService } from "../../services/title/title.service";
 	selector: "app-statistics",
 	standalone: true,
 	imports: [
+		DataTablesModule,
 		PanelComponent
 	],
 	templateUrl: "./statistics.component.html",
 	styleUrl: "./statistics.component.scss"
 })
-export class StatisticsComponent implements OnInit {
+export class StatisticsComponent implements OnInit, AfterViewInit {
 	@BlockUI()
 	private blockUI!: NgBlockUI;
+
+	@ViewChild("holdersTable")
+	private dtElementHolders?: DataTableDirective;
+
+	@ViewChild("inventorsTable")
+	private dtElementInventors?: DataTableDirective;
+
+	@ViewChild("citacoes")
+	private citacoes!: TemplateRef<any>;
+
+	public dtTriggerHolders: Subject<ADTSettings> = new Subject();
+	public dtTriggerInventors: Subject<ADTSettings> = new Subject();
+	public dtOptionsHolders!: ADTSettings;
+	public dtOptionsInventors!: ADTSettings;
 
 	public status?: IStatistics;
 	public topInventors?: ITopRanking[];
@@ -33,6 +51,7 @@ export class StatisticsComponent implements OnInit {
 
 	constructor (
 		private readonly alertsService: AlertsService,
+		private readonly dtTranslationService: DtTranslationService,
 		private readonly statisticsService: StatisticsService,
 		private readonly titleService: TitleService
 	) {
@@ -40,12 +59,15 @@ export class StatisticsComponent implements OnInit {
 	}
 
 	public ngOnInit (): void {
+		this.dtOptionsHolders = this.getTopRankingDtOptions();
+		this.dtOptionsInventors = this.getTopRankingDtOptions();
+
 		this.blockUI.start("Carregando estatísticas...");
 		forkJoin([
 			this.getStatistics(),
-			this.getTopInventors(5),
-			this.getTopHolders(5),
-			this.getRecentRequests(5)
+			this.getTopInventors(20),
+			this.getTopHolders(20),
+			this.getRecentRequests(20)
 		]).pipe(
 			finalize(() => {
 				this.blockUI.stop();
@@ -53,8 +75,17 @@ export class StatisticsComponent implements OnInit {
 				console.log(this.topInventors);
 				console.log(this.topHolders);
 				console.log(this.recentRequests);
+
+				this.dtOptionsHolders.data = this.topHolders || [];
+				this.dtOptionsInventors.data = this.topInventors || [];
+				this.rerenderDataTables();
 			})
 		).subscribe();
+	}
+
+	public ngAfterViewInit (): void {
+		this.dtOptionsHolders.columns![3].ngTemplateRef = { ref: this.citacoes };
+		this.dtOptionsInventors.columns![3].ngTemplateRef = { ref: this.citacoes };
 	}
 
 	public getStatistics (): Observable<IStatistics | null> {
@@ -123,5 +154,52 @@ export class StatisticsComponent implements OnInit {
 				return of(null);
 			})
 		);
+	}
+
+	private async rerenderDataTables (): Promise<void> {
+		const dtInstanceHolders = await this.dtElementHolders?.dtInstance;
+		const dtInstanceInventors = await this.dtElementInventors?.dtInstance;
+
+		// Destroy the table first
+		dtInstanceHolders?.destroy();
+		dtInstanceInventors?.destroy();
+
+		// Call the dtTrigger to rerender again
+		this.dtTriggerHolders.next(this.dtOptionsHolders);
+		this.dtTriggerInventors.next(this.dtOptionsInventors);
+	}
+
+	private getTopRankingDtOptions (): ADTSettings {
+		return {
+			lengthMenu: [5, 10, 20],
+			stateSave: true,
+			language: this.dtTranslationService.getDataTablesPortugueseTranslation(),
+			columns: [{
+				title: "Ranking",
+				data: "ranking",
+				ngPipeInstance: {
+					transform: (value: string) => (value[0] === "#" ? value : `#${value}`)
+				},
+				className: "p-2 w-auto text-center align-middle"
+			}, {
+				title: "Nome",
+				data: "nomeVisualizacao",
+				className: "p-2 w-auto align-middle"
+			}, {
+				title: "Qtd. Citações",
+				data: "citacoes",
+				className: "p-2 w-auto align-middle"
+			}, {
+				title: "Aparece Em",
+				data: null,
+				defaultContent: "",
+				className: "p-1 align-middle",
+				width: "225px",
+				orderable: false,
+				searchable: false
+			}],
+			data: [],
+			order: [[0, "asc"]]
+		};
 	}
 }

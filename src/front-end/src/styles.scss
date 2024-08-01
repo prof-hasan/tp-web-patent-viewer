@@ -51,3 +51,7 @@ $primary: #003380;
 @import "bootstrap/scss/bootstrap";
 
 @import 'ngx-toastr/toastr';
+
+table.dataTable th {
+	padding-right: 2rem !important;
+}
