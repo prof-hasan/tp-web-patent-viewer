@@ -1,1 +1,27 @@
-<p>details works!</p>
+<ng-template #commentBtn let-data="adtData">
+	<div class="d-flex justify-content-center">
+		@if (data.comentario) {
+			<button class="btn btn-primary d-flex p-1" title="Visualizar comentário do despacho" (click)="showComment(data.comentario)">
+				<mat-icon fontIcon="subject"></mat-icon>
+			</button>
+		} @else {
+			<span>-</span>
+		}
+	</div>
+</ng-template>
+
+<div class="container-fluid">
+	<app-panel class="d-block mb-3" [header]="header">
+	</app-panel>
+
+	<div>
+		<app-panel class="d-block mb-3" header="Despachos">
+			<table
+				datatable
+				[dtOptions]="dtOptions!"
+				[dtTrigger]="dtTrigger"
+				class="w-100 row-border table table-bordered"
+			></table>
+		</app-panel>
+	</div>
+</div>
