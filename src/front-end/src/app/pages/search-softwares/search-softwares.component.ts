@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { MatIcon } from "@angular/material/icon";
+import { ActivatedRoute, RouterLink } from "@angular/router";
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { NgFor, NgIf } from "@angular/common";
@@ -35,6 +36,7 @@ import { getRequestsDtOptions, RequestDtType } from "../../shared/datatables-opt
 		NgIf,
 		NgSelectModule,
 		ReactiveFormsModule,
+		RouterLink,
 		LanguageComponent,
 		PanelComponent,
 		VisualValidatorComponent
@@ -73,6 +75,7 @@ export class SearchSoftwaresComponent implements OnInit, AfterViewInit, OnDestro
 	public results?: IPatent[];
 
 	constructor (
+		private readonly route: ActivatedRoute,
 		private readonly formBuilder: FormBuilder,
 		private readonly alertsService: AlertsService,
 		private readonly dtTranslationService: DtTranslationService,
@@ -103,6 +106,17 @@ export class SearchSoftwaresComponent implements OnInit, AfterViewInit, OnDestro
 				status: [{ key: "required" }]
 			}
 		};
+
+		const holder = this.route.snapshot.paramMap.get("holder");
+		const inventor = this.route.snapshot.paramMap.get("inventor");
+		if (holder || inventor) {
+			this.form.patchValue({
+				titular: holder || "",
+				inventor: inventor || "",
+				inicio: new Date(2000, 0, 1).toISOString().split("T")[0]
+			});
+			this.search();
+		}
 	}
 
 	public ngOnInit (): void {

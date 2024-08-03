@@ -10,9 +10,9 @@
 
 <ng-template #detailsBtn let-data="adtData">
 	<div class="d-flex justify-content-center">
-		<button class="btn btn-primary d-flex p-1" title="Detalhes da solicitação">
+		<a class="btn btn-primary d-flex p-1" title="Detalhes da solicitação" [routerLink]="'/details/' + data.codigo">
 			<mat-icon fontIcon="read_more"></mat-icon>
-		</button>
+		</a>
 	</div>
 </ng-template>
 

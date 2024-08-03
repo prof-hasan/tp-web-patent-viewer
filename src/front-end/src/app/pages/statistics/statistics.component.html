@@ -1,7 +1,14 @@
-<ng-template #citacoes let-data="adtData">
+<ng-template #citacoesHolder let-data="adtData">
 	<div>
-		<a href="">{{ data.qtdPatentes }} {{ data.qtdPatentes === 1 ? "patente" : "patentes" }}</a> e
-		<a href="">{{ data.qtdProgramas }} {{ data.qtdProgramas === 1 ? "programa" : "programas" }}</a>
+		<a [routerLink]="['/search-patents', { holder: data.nomeVisualizacao }]">{{ data.qtdPatentes }} {{ data.qtdPatentes === 1 ? "patente" : "patentes" }}</a> e
+		<a [routerLink]="['/search-softwares', { holder: data.nomeVisualizacao }]">{{ data.qtdProgramas }} {{ data.qtdProgramas === 1 ? "programa" : "programas" }}</a>
+	</div>
+</ng-template>
+
+<ng-template #citacoesInventor let-data="adtData">
+	<div>
+		<a [routerLink]="['/search-patents', { inventor: data.nomeVisualizacao }]">{{ data.qtdPatentes }} {{ data.qtdPatentes === 1 ? "patente" : "patentes" }}</a> e
+		<a [routerLink]="['/search-softwares', { inventor: data.nomeVisualizacao }]">{{ data.qtdProgramas }} {{ data.qtdProgramas === 1 ? "programa" : "programas" }}</a>
 	</div>
 </ng-template>
 
@@ -17,9 +24,9 @@
 
 <ng-template #detailsBtn let-data="adtData">
 	<div class="d-flex justify-content-center">
-		<button class="btn btn-primary d-flex p-1" title="Detalhes da solicitação">
+		<a class="btn btn-primary d-flex p-1" title="Detalhes da solicitação" [routerLink]="'/details/' + data.codigo">
 			<mat-icon fontIcon="read_more"></mat-icon>
-		</button>
+		</a>
 	</div>
 </ng-template>
 

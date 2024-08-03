@@ -1,5 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { MatIcon } from "@angular/material/icon";
+import { RouterLink } from "@angular/router";
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
 
 import { ADTSettings } from "angular-datatables/src/models/settings";
@@ -35,6 +36,7 @@ import { getRequestsDtOptions, RequestDtType } from "../../shared/datatables-opt
 		DataTablesModule,
 		MatIcon,
 		NgxEchartsDirective,
+		RouterLink,
 		PanelComponent,
 		StatisticsCardsComponent
 	],
@@ -55,8 +57,11 @@ export class StatisticsComponent implements OnInit, AfterViewInit, OnDestroy {
 	@ViewChild("requestsTable")
 	private dtElementRequests?: DataTableDirective;
 
-	@ViewChild("citacoes")
-	private citacoes!: TemplateRef<any>;
+	@ViewChild("citacoesHolder")
+	private citacoesHolder!: TemplateRef<any>;
+
+	@ViewChild("citacoesInventor")
+	private citacoesInventor!: TemplateRef<any>;
 
 	@ViewChild("statusColumn")
 	private statusColumn!: TemplateRef<any>;
@@ -128,8 +133,8 @@ export class StatisticsComponent implements OnInit, AfterViewInit, OnDestroy {
 	}
 
 	public ngAfterViewInit (): void {
-		this.dtOptionsHolders.columns![3].ngTemplateRef = { ref: this.citacoes };
-		this.dtOptionsInventors.columns![3].ngTemplateRef = { ref: this.citacoes };
+		this.dtOptionsHolders.columns![3].ngTemplateRef = { ref: this.citacoesHolder };
+		this.dtOptionsInventors.columns![3].ngTemplateRef = { ref: this.citacoesInventor };
 		this.dtOptionsRequests.columns![4].ngTemplateRef = { ref: this.statusColumn };
 		this.dtOptionsRequests.columns![5].ngTemplateRef = { ref: this.detailsBtn };
 	}
