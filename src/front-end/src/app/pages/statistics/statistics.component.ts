@@ -11,6 +11,7 @@ import { catchError, finalize, forkJoin, Observable, of, Subject, tap } from "rx
 import { PanelComponent } from "../../components/panel/panel.component";
 
 import { IRecentRequest, IStatistics, ITopRanking } from "../../models/statistics";
+import { PatentStatus, PatentType } from "../../models/patent";
 
 import { AlertsService } from "../../services/alerts/alerts.service";
 import { DtTranslationService } from "../../services/dt-translation/dt-translation.service";
@@ -44,8 +45,13 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 	@ViewChild("citacoes")
 	private citacoes!: TemplateRef<any>;
 
+	@ViewChild("statusColumn")
+	private statusColumn!: TemplateRef<any>;
+
 	@ViewChild("detailsBtn")
 	private detailsBtn!: TemplateRef<any>;
+
+	public PatentStatus = PatentStatus;
 
 	public dtTriggerHolders: Subject<ADTSettings> = new Subject();
 	public dtTriggerInventors: Subject<ADTSettings> = new Subject();
@@ -81,26 +87,33 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 				ngPipeInstance: {
 					transform: (value: string) => (value.includes("/") ? value : new Date(value).toLocaleDateString("pt-BR"))
 				},
-				className: "p-2 w-auto align-middle"
+				className: "p-2 text-start align-middle",
+				width: "98px"
 			}, {
 				title: "Tipo",
 				data: "tipo",
 				ngPipeInstance: {
-					transform: (value: string) => value[0].toUpperCase() + value.slice(1).toLowerCase()
+					transform: (value: PatentType | string) => value[0].toUpperCase() + value.slice(1).toLowerCase()
 				},
-				className: "p-2 w-auto align-middle"
+				className: "p-2 align-middle",
+				width: "105px"
 			}, {
 				title: "Título",
 				data: "nome",
-				className: "p-2 w-auto align-middle"
+				className: "p-2 w-auto align-middle",
+				ngPipeInstance: {
+					transform: (value: string) => value || "-"
+				}
 			}, {
 				title: "Número",
 				data: "codigo",
-				className: "p-2 w-auto align-middle"
+				className: "p-2 align-middle",
+				width: "176px"
 			}, {
 				title: "Status",
 				data: "status",
-				className: "p-2 w-auto align-middle"
+				className: "p-2 align-middle",
+				width: "145px"
 			}, {
 				title: "Detalhes",
 				data: null,
@@ -139,6 +152,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 	public ngAfterViewInit (): void {
 		this.dtOptionsHolders.columns![3].ngTemplateRef = { ref: this.citacoes };
 		this.dtOptionsInventors.columns![3].ngTemplateRef = { ref: this.citacoes };
+		this.dtOptionsRequests.columns![4].ngTemplateRef = { ref: this.statusColumn };
 		this.dtOptionsRequests.columns![5].ngTemplateRef = { ref: this.detailsBtn };
 	}
 
@@ -237,7 +251,8 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 				ngPipeInstance: {
 					transform: (value: string) => (value[0] === "#" ? value : `#${value}`)
 				},
-				className: "p-2 w-auto text-center align-middle"
+				className: "p-2 text-center align-middle",
+				width: "106px"
 			}, {
 				title: "Nome",
 				data: "nomeVisualizacao",
@@ -245,13 +260,13 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 			}, {
 				title: "Qtd. Citações",
 				data: "citacoes",
-				className: "p-2 w-auto align-middle"
+				className: "p-2 align-middle",
+				width: "145px"
 			}, {
 				title: "Aparece Em",
 				data: null,
-				defaultContent: "",
-				className: "p-1 align-middle",
-				width: "225px",
+				className: "p-2 align-middle",
+				width: "235px",
 				orderable: false,
 				searchable: false
 			}],
