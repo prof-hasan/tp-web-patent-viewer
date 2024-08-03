@@ -12,7 +12,7 @@ export interface IPatentFilters {
 	code?: string;
 	holder?: string;
 	inventor?: string;
-	status?: PatentStatus[];
+	"status[]"?: PatentStatus[];
 	title?: string;
 	type?: PatentType;
 }
@@ -25,7 +25,7 @@ export class PatentsService {
 		const params = new HttpParams().appendAll({
 			...filters,
 			end: filters.end.toISOString().split("T")[0],	// YYYY-MM-DD
-			start: filters.end.toISOString().split("T")[0]	// YYYY-MM-DD
+			start: filters.start.toISOString().split("T")[0]	// YYYY-MM-DD
 		});
 
 		return this.http.get<IPatent[]>(

@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from "@angular/common/http";
 import { MatIcon } from "@angular/material/icon";
-import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
 
 import { ADTSettings } from "angular-datatables/src/models/settings";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
@@ -25,7 +25,7 @@ import { ReportPeriod, StatisticsService } from "../../services/statistics/stati
 import { getRequestsChartOptions } from "./charts/requests-chart";
 import { getStatusChartOptions } from "./charts/status-chart";
 
-import { getRecentRequestsDtOptions } from "./datatables-options/recent-requests";
+import { getRequestsDtOptions } from "../../shared/datatables-options/requests";
 import { getTopRankingDtOptions } from "./datatables-options/top-ranking";
 
 @Component({
@@ -42,7 +42,7 @@ import { getTopRankingDtOptions } from "./datatables-options/top-ranking";
 	templateUrl: "./statistics.component.html",
 	styleUrl: "./statistics.component.scss"
 })
-export class StatisticsComponent implements OnInit, AfterViewInit {
+export class StatisticsComponent implements OnInit, AfterViewInit, OnDestroy {
 	@BlockUI()
 	private blockUI!: NgBlockUI;
 
@@ -97,7 +97,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 		this.blockUI.start("Carregando estatísticas...");
 		this.dtOptionsHolders = getTopRankingDtOptions(this.dtTranslationService);
 		this.dtOptionsInventors = getTopRankingDtOptions(this.dtTranslationService);
-		this.dtOptionsRequests = getRecentRequestsDtOptions(this.dtTranslationService);
+		this.dtOptionsRequests = getRequestsDtOptions(this.dtTranslationService);
 
 		forkJoin([
 			this.getStatus(),
@@ -132,6 +132,12 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 		this.dtOptionsInventors.columns![3].ngTemplateRef = { ref: this.citacoes };
 		this.dtOptionsRequests.columns![4].ngTemplateRef = { ref: this.statusColumn };
 		this.dtOptionsRequests.columns![5].ngTemplateRef = { ref: this.detailsBtn };
+	}
+
+	public ngOnDestroy (): void {
+		this.dtTriggerHolders.unsubscribe();
+		this.dtTriggerInventors.unsubscribe();
+		this.dtTriggerRequests.unsubscribe();
 	}
 
 	public getStatus (): Observable<IStatistics | null> {

@@ -1,12 +1,12 @@
 import { ADTSettings } from "angular-datatables/src/models/settings";
 
-import { PatentType } from "../../../models/patent";
+import { PatentType } from "../../models/patent";
 
-import { DtTranslationService } from "../../../services/dt-translation/dt-translation.service";
+import { DtTranslationService } from "../../services/dt-translation/dt-translation.service";
 
-export function getRecentRequestsDtOptions (dtTranslationService: DtTranslationService): ADTSettings {
+export function getRequestsDtOptions (dtTranslationService: DtTranslationService, lengthMenu: number[] = [5, 10, 20]): ADTSettings {
 	return {
-		lengthMenu: [5, 10, 20],
+		lengthMenu,
 		stateSave: true,
 		language: dtTranslationService.getDataTablesPortugueseTranslation(),
 		columns: [{
