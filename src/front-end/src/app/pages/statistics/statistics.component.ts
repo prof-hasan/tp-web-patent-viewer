@@ -25,8 +25,8 @@ import { ReportPeriod, StatisticsService } from "../../services/statistics/stati
 import { getRequestsChartOptions } from "./charts/requests-chart";
 import { getStatusChartOptions } from "./charts/status-chart";
 
-import { getRequestsDtOptions } from "../../shared/datatables-options/requests";
 import { getTopRankingDtOptions } from "./datatables-options/top-ranking";
+import { getRequestsDtOptions, RequestDtType } from "../../shared/datatables-options/requests";
 
 @Component({
 	selector: "app-statistics",
@@ -97,7 +97,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit, OnDestroy {
 		this.blockUI.start("Carregando estatísticas...");
 		this.dtOptionsHolders = getTopRankingDtOptions(this.dtTranslationService);
 		this.dtOptionsInventors = getTopRankingDtOptions(this.dtTranslationService);
-		this.dtOptionsRequests = getRequestsDtOptions(this.dtTranslationService);
+		this.dtOptionsRequests = getRequestsDtOptions(this.dtTranslationService, RequestDtType.RECENT_REQUESTS);
 
 		forkJoin([
 			this.getStatus(),

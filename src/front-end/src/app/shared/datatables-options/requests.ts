@@ -4,9 +4,15 @@ import { PatentType } from "../../models/patent";
 
 import { DtTranslationService } from "../../services/dt-translation/dt-translation.service";
 
-export function getRequestsDtOptions (dtTranslationService: DtTranslationService, lengthMenu: number[] = [5, 10, 20]): ADTSettings {
-	return {
-		lengthMenu,
+export enum RequestDtType {
+	RECENT_REQUESTS = "RECENT_REQUESTS",
+	PATENTS = "PATENTS",
+	PROGRAMS = "PROGRAMS"
+}
+
+export function getRequestsDtOptions (dtTranslationService: DtTranslationService, type: RequestDtType): ADTSettings {
+	const options: ADTSettings = {
+		lengthMenu: type === RequestDtType.RECENT_REQUESTS ? [5, 10, 20] : [10, 25, 50, 100],
 		stateSave: true,
 		language: dtTranslationService.getDataTablesPortugueseTranslation(),
 		columns: [{
@@ -17,7 +23,13 @@ export function getRequestsDtOptions (dtTranslationService: DtTranslationService
 			},
 			className: "p-2 text-start align-middle",
 			width: "98px"
-		}, {
+		}],
+		data: [],
+		order: [[0, "desc"]]
+	};
+
+	if (type === RequestDtType.RECENT_REQUESTS) {
+		options.columns!.push({
 			title: "Tipo",
 			data: "tipo",
 			ngPipeInstance: {
@@ -25,33 +37,46 @@ export function getRequestsDtOptions (dtTranslationService: DtTranslationService
 			},
 			className: "p-2 align-middle",
 			width: "105px"
-		}, {
-			title: "Título",
-			data: "nome",
-			className: "p-2 w-auto align-middle",
-			ngPipeInstance: {
-				transform: (value: string) => value || "-"
-			}
-		}, {
-			title: "Número",
-			data: "codigo",
-			className: "p-2 align-middle",
-			width: "176px"
-		}, {
-			title: "Status",
-			data: "status",
-			className: "p-2 align-middle",
-			width: "145px"
-		}, {
-			title: "Detalhes",
+		});
+	}
+
+	options.columns!.push({
+		title: "Título",
+		data: "nome",
+		className: "p-2 w-auto align-middle",
+		ngPipeInstance: {
+			transform: (value: string) => value || "-"
+		}
+	}, {
+		title: "Número",
+		data: "codigo",
+		className: "p-2 align-middle",
+		width: "176px"
+	});
+
+	if (type === RequestDtType.PROGRAMS) {
+		options.columns!.push({
+			title: "Linguagens",
 			data: null,
-			defaultContent: "",
-			className: "p-2 text-center align-middle",
-			width: "98px",
+			className: "p-2 w-auto text-center align-middle",
 			orderable: false,
 			searchable: false
-		}],
-		data: [],
-		order: [[0, "desc"]]
-	};
+		});
+	}
+
+	options.columns!.push({
+		title: "Status",
+		data: null,
+		className: "p-2 align-middle",
+		width: "145px"
+	}, {
+		title: "Detalhes",
+		data: null,
+		className: "p-2 text-center align-middle",
+		width: "98px",
+		orderable: false,
+		searchable: false
+	});
+
+	return options;
 }

@@ -21,7 +21,7 @@ import { DtTranslationService } from "../../services/dt-translation/dt-translati
 import { TitleService } from "../../services/title/title.service";
 import { IPatentFilters, PatentsService } from "../../services/patents/patents.service";
 
-import { getRequestsDtOptions } from "../../shared/datatables-options/requests";
+import { getRequestsDtOptions, RequestDtType } from "../../shared/datatables-options/requests";
 
 @Component({
 	selector: "app-search-patents",
@@ -100,12 +100,12 @@ export class SearchPatentsComponent implements OnInit, AfterViewInit, OnDestroy 
 	}
 
 	public ngOnInit (): void {
-		this.dtOptions = getRequestsDtOptions(this.dtTranslationService, [10, 25, 50, 100]);
+		this.dtOptions = getRequestsDtOptions(this.dtTranslationService, RequestDtType.PATENTS);
 	}
 
 	public ngAfterViewInit (): void {
-		this.dtOptions.columns![4].ngTemplateRef = { ref: this.statusColumn };
-		this.dtOptions.columns![5].ngTemplateRef = { ref: this.detailsBtn };
+		this.dtOptions.columns![3].ngTemplateRef = { ref: this.statusColumn };
+		this.dtOptions.columns![4].ngTemplateRef = { ref: this.detailsBtn };
 	}
 
 	public ngOnDestroy (): void {
