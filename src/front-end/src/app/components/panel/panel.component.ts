@@ -15,7 +15,7 @@ import { CollapseModule } from "ngx-bootstrap/collapse";
 })
 export class PanelComponent {
 	@Input()
-	public title: string = "";
+	public header: string = "";
 
 	public collapsed: boolean = false;
 }

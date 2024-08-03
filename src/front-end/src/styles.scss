@@ -52,6 +52,6 @@ $primary: #003380;
 
 @import 'ngx-toastr/toastr';
 
-table.dataTable th {
+table.dataTable th:not(.dt-orderable-none) {
 	padding-right: 2rem !important;
 }

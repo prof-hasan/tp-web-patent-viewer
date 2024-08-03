@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from "@angular/common/http";
+import { MatIcon } from "@angular/material/icon";
 import { AfterViewInit, Component, OnInit, TemplateRef, ViewChild } from "@angular/core";
 
 import { ADTSettings } from "angular-datatables/src/models/settings";
@@ -21,6 +22,7 @@ import { TitleService } from "../../services/title/title.service";
 	standalone: true,
 	imports: [
 		DataTablesModule,
+		MatIcon,
 		PanelComponent
 	],
 	templateUrl: "./statistics.component.html",
@@ -36,13 +38,21 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 	@ViewChild("inventorsTable")
 	private dtElementInventors?: DataTableDirective;
 
+	@ViewChild("requestsTable")
+	private dtElementRequests?: DataTableDirective;
+
 	@ViewChild("citacoes")
 	private citacoes!: TemplateRef<any>;
 
+	@ViewChild("detailsBtn")
+	private detailsBtn!: TemplateRef<any>;
+
 	public dtTriggerHolders: Subject<ADTSettings> = new Subject();
 	public dtTriggerInventors: Subject<ADTSettings> = new Subject();
+	public dtTriggerRequests: Subject<ADTSettings> = new Subject();
 	public dtOptionsHolders!: ADTSettings;
 	public dtOptionsInventors!: ADTSettings;
+	public dtOptionsRequests!: ADTSettings;
 
 	public status?: IStatistics;
 	public topInventors?: ITopRanking[];
@@ -61,6 +71,48 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 	public ngOnInit (): void {
 		this.dtOptionsHolders = this.getTopRankingDtOptions();
 		this.dtOptionsInventors = this.getTopRankingDtOptions();
+		this.dtOptionsRequests = {
+			lengthMenu: [5, 10, 20],
+			stateSave: true,
+			language: this.dtTranslationService.getDataTablesPortugueseTranslation(),
+			columns: [{
+				title: "Data",
+				data: "dataDeposito",
+				ngPipeInstance: {
+					transform: (value: string) => (value.includes("/") ? value : new Date(value).toLocaleDateString("pt-BR"))
+				},
+				className: "p-2 w-auto align-middle"
+			}, {
+				title: "Tipo",
+				data: "tipo",
+				ngPipeInstance: {
+					transform: (value: string) => value[0].toUpperCase() + value.slice(1).toLowerCase()
+				},
+				className: "p-2 w-auto align-middle"
+			}, {
+				title: "Título",
+				data: "nome",
+				className: "p-2 w-auto align-middle"
+			}, {
+				title: "Número",
+				data: "codigo",
+				className: "p-2 w-auto align-middle"
+			}, {
+				title: "Status",
+				data: "status",
+				className: "p-2 w-auto align-middle"
+			}, {
+				title: "Detalhes",
+				data: null,
+				defaultContent: "",
+				className: "p-2 text-center align-middle",
+				width: "98px",
+				orderable: false,
+				searchable: false
+			}],
+			data: [],
+			order: [[0, "desc"]]
+		};
 
 		this.blockUI.start("Carregando estatísticas...");
 		forkJoin([
@@ -78,6 +130,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 
 				this.dtOptionsHolders.data = this.topHolders || [];
 				this.dtOptionsInventors.data = this.topInventors || [];
+				this.dtOptionsRequests.data = this.recentRequests || [];
 				this.rerenderDataTables();
 			})
 		).subscribe();
@@ -86,6 +139,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 	public ngAfterViewInit (): void {
 		this.dtOptionsHolders.columns![3].ngTemplateRef = { ref: this.citacoes };
 		this.dtOptionsInventors.columns![3].ngTemplateRef = { ref: this.citacoes };
+		this.dtOptionsRequests.columns![5].ngTemplateRef = { ref: this.detailsBtn };
 	}
 
 	public getStatistics (): Observable<IStatistics | null> {
@@ -159,14 +213,17 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 	private async rerenderDataTables (): Promise<void> {
 		const dtInstanceHolders = await this.dtElementHolders?.dtInstance;
 		const dtInstanceInventors = await this.dtElementInventors?.dtInstance;
+		const dtInstanceRequests = await this.dtElementRequests?.dtInstance;
 
 		// Destroy the table first
 		dtInstanceHolders?.destroy();
 		dtInstanceInventors?.destroy();
+		dtInstanceRequests?.destroy();
 
 		// Call the dtTrigger to rerender again
 		this.dtTriggerHolders.next(this.dtOptionsHolders);
 		this.dtTriggerInventors.next(this.dtOptionsInventors);
+		this.dtTriggerRequests.next(this.dtOptionsRequests);
 	}
 
 	private getTopRankingDtOptions (): ADTSettings {
