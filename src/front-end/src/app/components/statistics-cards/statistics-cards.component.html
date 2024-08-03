@@ -1,0 +1,35 @@
+<h2>{{ header }}</h2>
+
+<div class="row">
+	<div class="col-12 col-md-6 col-xl-3 mb-3">
+		<div class="p-2 text-center rounded border border-dark">
+			<h6>SOLICITAÇÕES</h6>
+			<h3>{{ statistics ? statistics.ARQUIVADO + statistics.CONCEDIDO + statistics.EM_ANDAMENTO : 0 }}</h3>
+			<h6 class="mb-0">100%</h6>
+		</div>
+	</div>
+
+	<div class="col-12 col-md-6 col-xl-3 mb-3">
+		<div class="p-2 text-center rounded border border-primary text-primary">
+			<h6>EM ANDAMENTO</h6>
+			<h3>{{ statistics?.EM_ANDAMENTO || 0 }}</h3>
+			<h6 class="mb-0">{{ getPercentage(statistics?.EM_ANDAMENTO) }}</h6>
+		</div>
+	</div>
+
+	<div class="col-12 col-md-6 col-xl-3 mb-3">
+		<div class="p-2 text-center rounded border border-danger text-danger">
+			<h6>ARQUIVADO</h6>
+			<h3>{{ statistics?.ARQUIVADO || 0 }}</h3>
+			<h6 class="mb-0">{{ getPercentage(statistics?.ARQUIVADO) }}</h6>
+		</div>
+	</div>
+
+	<div class="col-12 col-md-6 col-xl-3 mb-3">
+		<div class="p-2 text-center rounded border border-success text-success">
+			<h6>CONCEDIDO</h6>
+			<h3>{{ statistics?.CONCEDIDO || 0 }}</h3>
+			<h6 class="mb-0">{{ getPercentage(statistics?.CONCEDIDO) }}</h6>
+		</div>
+	</div>
+</div>

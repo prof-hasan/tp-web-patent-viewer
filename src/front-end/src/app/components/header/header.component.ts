@@ -17,5 +17,5 @@ import { CollapseModule } from "ngx-bootstrap/collapse";
 	styleUrl: "./header.component.scss"
 })
 export class HeaderComponent {
-	public isMenuCollapsed: boolean = false;
+	public isMenuCollapsed: boolean = true;
 }

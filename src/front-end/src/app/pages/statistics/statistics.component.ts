@@ -6,17 +6,27 @@ import { ADTSettings } from "angular-datatables/src/models/settings";
 import { BlockUI, NgBlockUI } from "ng-block-ui";
 import { DataTableDirective, DataTablesModule } from "angular-datatables";
 
+import { BarSeriesOption, ECharts, EChartsOption } from "echarts";
+import { NgxEchartsDirective, provideEcharts } from "ngx-echarts";
+
 import { catchError, finalize, forkJoin, Observable, of, Subject, tap } from "rxjs";
 
 import { PanelComponent } from "../../components/panel/panel.component";
+import { StatisticsCardsComponent } from "../../components/statistics-cards/statistics-cards.component";
 
-import { IRecentRequest, IStatistics, ITopRanking } from "../../models/statistics";
-import { PatentStatus, PatentType } from "../../models/patent";
+import { PatentStatus } from "../../models/patent";
+import { IRecentRequest, IRequests, IStatistics, ITopRanking } from "../../models/statistics";
 
 import { AlertsService } from "../../services/alerts/alerts.service";
 import { DtTranslationService } from "../../services/dt-translation/dt-translation.service";
-import { StatisticsService } from "../../services/statistics/statistics.service";
 import { TitleService } from "../../services/title/title.service";
+import { ReportPeriod, StatisticsService } from "../../services/statistics/statistics.service";
+
+import { getRequestsChartOptions } from "./charts/requests-chart";
+import { getStatusChartOptions } from "./charts/status-chart";
+
+import { getRecentRequestsDtOptions } from "./datatables-options/recent-requests";
+import { getTopRankingDtOptions } from "./datatables-options/top-ranking";
 
 @Component({
 	selector: "app-statistics",
@@ -24,8 +34,11 @@ import { TitleService } from "../../services/title/title.service";
 	imports: [
 		DataTablesModule,
 		MatIcon,
-		PanelComponent
+		NgxEchartsDirective,
+		PanelComponent,
+		StatisticsCardsComponent
 	],
+	providers: [provideEcharts()],
 	templateUrl: "./statistics.component.html",
 	styleUrl: "./statistics.component.scss"
 })
@@ -61,9 +74,15 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 	public dtOptionsRequests!: ADTSettings;
 
 	public status?: IStatistics;
+	public requests?: IRequests;
 	public topInventors?: ITopRanking[];
 	public topHolders?: ITopRanking[];
 	public recentRequests?: IRecentRequest[];
+
+	public statusChart?: ECharts;
+	public requestsChart?: ECharts;
+	public statusChartOptions: EChartsOption = getStatusChartOptions(this);
+	public requestsChartOptions: EChartsOption = getRequestsChartOptions();
 
 	constructor (
 		private readonly alertsService: AlertsService,
@@ -75,76 +94,35 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 	}
 
 	public ngOnInit (): void {
-		this.dtOptionsHolders = this.getTopRankingDtOptions();
-		this.dtOptionsInventors = this.getTopRankingDtOptions();
-		this.dtOptionsRequests = {
-			lengthMenu: [5, 10, 20],
-			stateSave: true,
-			language: this.dtTranslationService.getDataTablesPortugueseTranslation(),
-			columns: [{
-				title: "Data",
-				data: "dataDeposito",
-				ngPipeInstance: {
-					transform: (value: string) => (value.includes("/") ? value : new Date(value).toLocaleDateString("pt-BR"))
-				},
-				className: "p-2 text-start align-middle",
-				width: "98px"
-			}, {
-				title: "Tipo",
-				data: "tipo",
-				ngPipeInstance: {
-					transform: (value: PatentType | string) => value[0].toUpperCase() + value.slice(1).toLowerCase()
-				},
-				className: "p-2 align-middle",
-				width: "105px"
-			}, {
-				title: "Título",
-				data: "nome",
-				className: "p-2 w-auto align-middle",
-				ngPipeInstance: {
-					transform: (value: string) => value || "-"
-				}
-			}, {
-				title: "Número",
-				data: "codigo",
-				className: "p-2 align-middle",
-				width: "176px"
-			}, {
-				title: "Status",
-				data: "status",
-				className: "p-2 align-middle",
-				width: "145px"
-			}, {
-				title: "Detalhes",
-				data: null,
-				defaultContent: "",
-				className: "p-2 text-center align-middle",
-				width: "98px",
-				orderable: false,
-				searchable: false
-			}],
-			data: [],
-			order: [[0, "desc"]]
-		};
-
 		this.blockUI.start("Carregando estatísticas...");
+		this.dtOptionsHolders = getTopRankingDtOptions(this.dtTranslationService);
+		this.dtOptionsInventors = getTopRankingDtOptions(this.dtTranslationService);
+		this.dtOptionsRequests = getRecentRequestsDtOptions(this.dtTranslationService);
+
 		forkJoin([
-			this.getStatistics(),
+			this.getStatus(),
+			this.getRequests(),
 			this.getTopInventors(20),
 			this.getTopHolders(20),
 			this.getRecentRequests(20)
 		]).pipe(
 			finalize(() => {
-				this.blockUI.stop();
-				console.log(this.status);
-				console.log(this.topInventors);
-				console.log(this.topHolders);
-				console.log(this.recentRequests);
+				(this.statusChartOptions.series as BarSeriesOption[])[0].data = [this.status?.PATENTE.EM_ANDAMENTO, this.status?.PROGRAMA.EM_ANDAMENTO];
+				(this.statusChartOptions.series as BarSeriesOption[])[1].data = [this.status?.PATENTE.ARQUIVADO, this.status?.PROGRAMA.ARQUIVADO];
+				(this.statusChartOptions.series as BarSeriesOption[])[2].data = [this.status?.PATENTE.CONCEDIDO, this.status?.PROGRAMA.CONCEDIDO];
+				this.statusChart?.setOption(this.statusChartOptions);
+
+				(this.requestsChartOptions.series as BarSeriesOption[])[0].data = this.requests?.PATENTE.map(r => r.quantidade);
+				(this.requestsChartOptions.series as BarSeriesOption[])[1].data = this.requests?.PROGRAMA.map(r => r.quantidade);
+				(this.requestsChartOptions.xAxis as any).data = this.requests?.PATENTE.map(r => r.periodo);
+				this.requestsChart?.setOption(this.requestsChartOptions);
 
 				this.dtOptionsHolders.data = this.topHolders || [];
 				this.dtOptionsInventors.data = this.topInventors || [];
 				this.dtOptionsRequests.data = this.recentRequests || [];
 				this.rerenderDataTables();
+
+				this.blockUI.stop();
 			})
 		).subscribe();
 	}
@@ -156,7 +134,7 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 		this.dtOptionsRequests.columns![5].ngTemplateRef = { ref: this.detailsBtn };
 	}
 
-	public getStatistics (): Observable<IStatistics | null> {
+	public getStatus (): Observable<IStatistics | null> {
 		return this.statisticsService.getStatus().pipe(
 			tap((status: IStatistics) => {
 				this.status = status;
@@ -166,6 +144,23 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 				this.alertsService.httpErrorAlert(
 					"Falha ao Carregar Estatísticas",
 					"Não foi possível obter o status das patentes.",
+					error
+				);
+				return of(null);
+			})
+		);
+	}
+
+	public getRequests (): Observable<IRequests | null> {
+		return this.statisticsService.getRequests(ReportPeriod.Yearly).pipe(
+			tap((requests: IRequests) => {
+				this.requests = requests;
+			}),
+
+			catchError((error: HttpErrorResponse) => {
+				this.alertsService.httpErrorAlert(
+					"Falha ao Carregar Estatísticas",
+					"Não foi possível obter a distribuição anual de patentes.",
 					error
 				);
 				return of(null);
@@ -238,40 +233,5 @@ export class StatisticsComponent implements OnInit, AfterViewInit {
 		this.dtTriggerHolders.next(this.dtOptionsHolders);
 		this.dtTriggerInventors.next(this.dtOptionsInventors);
 		this.dtTriggerRequests.next(this.dtOptionsRequests);
-	}
-
-	private getTopRankingDtOptions (): ADTSettings {
-		return {
-			lengthMenu: [5, 10, 20],
-			stateSave: true,
-			language: this.dtTranslationService.getDataTablesPortugueseTranslation(),
-			columns: [{
-				title: "Ranking",
-				data: "ranking",
-				ngPipeInstance: {
-					transform: (value: string) => (value[0] === "#" ? value : `#${value}`)
-				},
-				className: "p-2 text-center align-middle",
-				width: "106px"
-			}, {
-				title: "Nome",
-				data: "nomeVisualizacao",
-				className: "p-2 w-auto align-middle"
-			}, {
-				title: "Qtd. Citações",
-				data: "citacoes",
-				className: "p-2 align-middle",
-				width: "145px"
-			}, {
-				title: "Aparece Em",
-				data: null,
-				className: "p-2 align-middle",
-				width: "235px",
-				orderable: false,
-				searchable: false
-			}],
-			data: [],
-			order: [[0, "asc"]]
-		};
 	}
 }

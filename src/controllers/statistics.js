@@ -1,4 +1,8 @@
 const { param } = require("express-validator");
+const dayjs = require("dayjs");
+
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+dayjs.extend(customParseFormat);
 
 const models = require("../database/models");
 const { validateRequest } = require("../utils/http-validation");
@@ -47,11 +51,18 @@ class Statistics {
 					[models.StatusPatente.ARQUIVADO]: 0,
 					[models.StatusPatente.CONCEDIDO]: 0,
 					[models.StatusPatente.EM_ANDAMENTO]: 0
+				},
+				TOTAL: {
+					[models.StatusPatente.ARQUIVADO]: 0,
+					[models.StatusPatente.CONCEDIDO]: 0,
+					[models.StatusPatente.EM_ANDAMENTO]: 0
 				}
 			};
 
-			for (const row of results)
+			for (const row of results) {
 				stats[row.tipo][row.status] = Number(row.count);
+				stats.TOTAL[row.status] += Number(row.count);
+			}
 
 			res.status(200).json(stats);
 		} catch (error) {
@@ -66,7 +77,7 @@ class Statistics {
 	 */
 	async requestsByPeriod (req, res) {
 		try {
-			const format = req.params.period === "yearly" ? "YYYY" : "YYYY-MM";
+			const format = req.params.period === "yearly" ? "YYYY" : "MM/YYYY";
 			const results = await models.Patentes.findAll({
 				attributes: [
 					"tipo",
@@ -74,7 +85,6 @@ class Statistics {
 					[models.sequelize.fn("COUNT", models.sequelize.literal("*")), "count"]
 				],
 				group: ["tipo", "periodo"],
-				order: [["periodo", "ASC"]],
 				raw: true
 			});
 
@@ -85,6 +95,26 @@ class Statistics {
 
 			for (const row of results)
 				stats[row.tipo].push({ periodo: row.periodo, quantidade: Number(row.count) });
+
+			const categories = Array.from(new Set(
+				stats[models.TipoPatente.PATENTE].map(r => r.periodo)
+					.concat(stats[models.TipoPatente.PROGRAMA].map(r => r.periodo))
+			));
+
+			for (const periodo of categories) {
+				if (!stats[models.TipoPatente.PATENTE].find(r => r.periodo === periodo))
+					stats[models.TipoPatente.PATENTE].push({ periodo, quantidade: 0 });
+
+				if (!stats[models.TipoPatente.PROGRAMA].find(r => r.periodo === periodo))
+					stats[models.TipoPatente.PROGRAMA].push({ periodo, quantidade: 0 });
+			}
+
+			for (const type in stats) {
+				stats[type].sort((a, b) => {
+					const format = req.params.period === "yearly" ? "YYYY" : "MM/YYYY";
+					return dayjs(a.periodo, format) - dayjs(b.periodo, format);
+				});
+			}
 
 			res.status(200).json(stats);
 		} catch (error) {

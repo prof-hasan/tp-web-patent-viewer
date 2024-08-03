@@ -25,6 +25,26 @@
 
 <div class="container">
 	<app-panel class="d-block mb-3" header="Estatísticas">
+		<div class="row mx-0">
+			<div class="col-12 col-md-6 col-xl-8 px-0">
+				<app-statistics-cards header="Patentes" [statistics]="status?.PATENTE"></app-statistics-cards>
+				<app-statistics-cards header="Programas de Computador" [statistics]="status?.PROGRAMA"></app-statistics-cards>
+				<app-statistics-cards header="Totalização" [statistics]="status?.TOTAL"></app-statistics-cards>
+			</div>
+			<div
+				echarts
+				[options]="statusChartOptions"
+				(chartInit)="statusChart = $event"
+				class="col-12 col-md-6 col-xl-4 ps-3 pe-0 echarts"
+			></div>
+		</div>
+
+		<div
+			echarts
+			[options]="requestsChartOptions"
+			(chartInit)="requestsChart = $event"
+			class="echarts"
+		></div>
 	</app-panel>
 
 	<app-panel class="d-block mb-3" header="Principais Titulares">

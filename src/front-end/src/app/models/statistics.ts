@@ -1,16 +1,15 @@
 import { PatentStatus, PatentType } from "./patent";
 
+export interface IStatisticsCount {
+	ARQUIVADO: number;
+	CONCEDIDO: number;
+	EM_ANDAMENTO: number;
+}
+
 export interface IStatistics {
-	PATENTE: {
-		ARQUIVADO: number;
-		CONCEDIDO: number;
-		EM_ANDAMENTO: number;
-	};
-	PROGRAMA: {
-		ARQUIVADO: number;
-		CONCEDIDO: number;
-		EM_ANDAMENTO: number;
-	};
+	PATENTE: IStatisticsCount;
+	PROGRAMA: IStatisticsCount;
+	TOTAL: IStatisticsCount;
 }
 
 export interface IRequests {
