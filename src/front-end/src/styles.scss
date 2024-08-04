@@ -1,0 +1,119 @@
+/* You can add global styles to this file, and also import other style files */
+/* Start setting up Angular Material */
+
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use "@angular/material" as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$PatentViewer-primary: mat.define-palette(mat.$indigo-palette);
+$PatentViewer-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$PatentViewer-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$PatentViewer-theme: mat.define-light-theme((
+	color: (
+		primary: $PatentViewer-primary,
+		accent: $PatentViewer-accent,
+		warn: $PatentViewer-warn,
+	)
+));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($PatentViewer-theme);
+
+/* Finished setting up Angular Material */
+
+$primary: #003380;
+// $info: #007BFF;
+
+// $min-contrast-ratio: 2.5;
+
+:root {
+	--primary: $primary;
+	--info: $info;
+}
+
+/* Importing Bootstrap SCSS file. */
+@import "bootstrap/scss/bootstrap";
+
+@import "@ng-select/ng-select/themes/default.theme.css";
+@import "ngx-toastr/toastr";
+
+table.dataTable th:not(.dt-orderable-none) {
+	padding-right: 2rem !important;
+}
+
+.text-justify {
+	text-align: justify !important;
+}
+
+/* Visual Validation for ng-select */
+
+.form-field.is-invalid .ng-select-container,
+.form-field.is-invalid > span > input {
+	border-color: #dc3545 !important;
+	padding-right: calc(.75em + .75rem);
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23dc3545' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23dc3545' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
+	background-repeat: no-repeat;
+	background-position: center right calc(.375em + .1875rem);
+	background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+}
+
+.form-field.is-invalid .ng-select-container:focus,
+.form-field.is-invalid.ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container,
+.form-field.is-invalid > span > input:focus {
+	border-color: #dc3545;
+	box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, .25) !important;
+}
+
+.form-field.is-invalid ~ .invalid-feedback {
+	display: block;
+}
+
+.form-field.is-valid .ng-select-container,
+.form-field.is-valid > span > input {
+	border-color: #28a745 !important;
+	padding-right: calc(.75em + .75rem);
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%2328a745' d='M2.3 6.73L.6 4.53c-.4-1.04.46-1.4 1.1-.8l1.1 1.4 3.4-3.8c.6-.63 1.6-.27 1.2.7l-4 4.6c-.43.5-.8.4-1.1.1z'/%3e%3c/svg%3e");
+	background-repeat: no-repeat;
+	background-position: center right calc(.375em + .1875rem);
+	background-size: calc(.75em + .375rem) calc(.75em + .375rem);
+}
+
+.form-field.is-valid .ng-select-container:focus,
+.form-field.is-valid.ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container,
+.form-field.is-valid > span > input:focus {
+	border-color: #28a745;
+	box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, .25) !important;
+}
+
+/* Multiselect Style */
+
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+	background-color: #335c99;
+	color: white;
+}
+
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon.left {
+	border-color: #1a488d;
+}
+
+.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-icon:hover {
+	background-color: $primary;
+	border-top-left-radius: 2px;
+	border-bottom-left-radius: 2px;
+}

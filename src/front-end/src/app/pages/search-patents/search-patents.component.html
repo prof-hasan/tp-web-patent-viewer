@@ -1,0 +1,163 @@
+<ng-template #statusColumn let-data="adtData">
+	@if (data.status === PatentStatus.EM_ANDAMENTO) {
+		<span class="text-primary fw-medium">EM ANDAMENTO</span>
+	} @else if (data.status === PatentStatus.CONCEDIDO) {
+		<span class="text-success fw-medium">CONCEDIDO</span>
+	} @else if (data.status === PatentStatus.ARQUIVADO) {
+		<span class="text-danger fw-medium">ARQUIVADO</span>
+	}
+</ng-template>
+
+<ng-template #detailsBtn let-data="adtData">
+	<div class="d-flex justify-content-center">
+		<a class="btn btn-primary d-flex p-1" title="Detalhes da solicitação" [routerLink]="'/details/' + data.codigo">
+			<mat-icon fontIcon="read_more"></mat-icon>
+		</a>
+	</div>
+</ng-template>
+
+<div class="container-fluid">
+	<app-panel class="d-block mb-3" header="Pesquisar Patentes">
+		<form [formGroup]="form" (ngSubmit)="search()">
+			<div class="row mb-2">
+				<div class="col-12 col-md-6">
+					<label for="titulo" class="form-label">
+						Título:
+					</label>
+
+					<app-visual-validator [config]="validations" field="titulo">
+						<input
+							id="titulo"
+							type="text"
+							class="form-control"
+							placeholder="Pesquise por parte de um título"
+							formControlName="titulo"
+						>
+					</app-visual-validator>
+				</div>
+				<div class="col-12 col-md-6">
+					<label for="codigo" class="form-label">
+						Código:
+					</label>
+
+					<app-visual-validator [config]="validations" field="codigo">
+						<input
+							id="codigo"
+							type="text"
+							class="form-control"
+							placeholder="Pesquise por parte de um código"
+							formControlName="codigo"
+						>
+					</app-visual-validator>
+				</div>
+			</div>
+
+			<div class="row mb-2">
+				<div class="col-12 col-md-6">
+					<label for="titular" class="form-label">
+						Titular:
+					</label>
+
+					<app-visual-validator [config]="validations" field="titular">
+						<input
+							id="titular"
+							type="text"
+							class="form-control"
+							placeholder="Pesquise por parte do nome de um titular"
+							formControlName="titular"
+						>
+					</app-visual-validator>
+				</div>
+				<div class="col-12 col-md-6">
+					<label for="inventor" class="form-label">
+						Inventor:
+					</label>
+
+					<app-visual-validator [config]="validations" field="inventor">
+						<input
+							id="inventor"
+							type="text"
+							class="form-control"
+							placeholder="Pesquise por parte do nome de um inventor"
+							formControlName="inventor"
+						>
+					</app-visual-validator>
+				</div>
+			</div>
+
+			<div class="row mb-3">
+				<div class="col-12 col-md-3">
+					<label for="inicio" class="form-label">
+						Data Inicial:
+					</label>
+
+					<app-visual-validator [config]="validations" field="inicio">
+						<input
+							id="inicio"
+							type="date"
+							class="form-control"
+							formControlName="inicio"
+						>
+					</app-visual-validator>
+				</div>
+				<div class="col-12 col-md-3">
+					<label for="fim" class="form-label">
+						Data Final:
+					</label>
+
+					<app-visual-validator [config]="validations" field="fim">
+						<input
+							id="fim"
+							type="date"
+							class="form-control"
+							formControlName="fim"
+						>
+					</app-visual-validator>
+				</div>
+				<div class="col-12 col-md-6">
+					<label for="status" class="form-label">
+						Status:
+					</label>
+
+					<app-visual-validator [config]="validations" field="status">
+						<ng-select
+							[items]="statusOptions"
+							placeholder="Filtre os dados pelo status da solicitação"
+							bindValue="value"
+							[multiple]="true"
+							[closeOnSelect]="false"
+							labelForId="status"
+							formControlName="status"
+						></ng-select>
+					</app-visual-validator>
+				</div>
+			</div>
+
+			<div class="row">
+				<div>
+					<button class="d-flex btn btn-primary ms-auto" type="submit" [disabled]="form.invalid">
+						<mat-icon class="me-2" fontIcon="search"></mat-icon>
+						Pesquisar
+					</button>
+				</div>
+			</div>
+		</form>
+	</app-panel>
+
+	<div class="alert alert-primary mb-0" role="alert" *ngIf="results && !results.length">
+		<div class="text-justify">
+			Nenhuma patente foi encontrada para os filtros pesquisados.
+		</div>
+	</div>
+
+	<div [hidden]="!results || !results.length">
+		<app-panel class="d-block mb-3" header="Resultados">
+			<table
+				datatable
+				[dtOptions]="dtOptions!"
+				[dtTrigger]="dtTrigger"
+				class="w-100 row-border table table-bordered"
+			></table>
+		</app-panel>
+	</div>
+</div>
