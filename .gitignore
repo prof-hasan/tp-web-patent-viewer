@@ -2,7 +2,7 @@ node_modules
 
 !.gitkeep
 
-public/*
-!public/index.html
+src/public/*
+!src/public/index.html
 
 src/database/*.backup

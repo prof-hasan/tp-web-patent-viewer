@@ -1,11 +1,11 @@
 {
 	"name": "patent-viewer",
-	"version": "0.0.0",
+	"version": "1.0.0",
 	"scripts": {
 		"ng": "ng",
 		"start": "ng serve",
 		"build": "ng build",
-		"publish": "ng build && del-cli --force ../public && cp-cli ./dist/speak-master ../public",
+		"publish": "ng build && del-cli --force ../public && cp-cli ./dist/patent-viewer/browser ../public",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test"
 	},
