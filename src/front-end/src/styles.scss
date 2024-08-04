@@ -57,6 +57,10 @@ table.dataTable th:not(.dt-orderable-none) {
 	padding-right: 2rem !important;
 }
 
+.text-justify {
+	text-align: justify !important;
+}
+
 /* Visual Validation for ng-select */
 
 .form-field.is-invalid .ng-select-container,

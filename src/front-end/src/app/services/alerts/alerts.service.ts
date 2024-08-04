@@ -9,7 +9,10 @@ export class AlertsService {
 		Swal.fire({
 			icon,
 			buttonsStyling: false,
-			customClass: { confirmButton: "btn btn-primary btn-lg" },
+			customClass: {
+				confirmButton: "btn btn-primary btn-lg",
+				htmlContainer: "text-justify"
+			},
 			title,
 			html
 		});

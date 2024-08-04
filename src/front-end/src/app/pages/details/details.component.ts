@@ -2,6 +2,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { MatIcon } from "@angular/material/icon";
 import { ActivatedRoute, Router } from "@angular/router";
 import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from "@angular/core";
+import { DatePipe, NgFor, NgIf } from "@angular/common";
 
 import { ADTSettings } from "angular-datatables/src/models/settings";
 import { ToastrService } from "ngx-toastr";
@@ -10,9 +11,10 @@ import { DataTableDirective, DataTablesModule } from "angular-datatables";
 
 import { finalize, Subject } from "rxjs";
 
+import { LanguageComponent } from "../../components/language/language.component";
 import { PanelComponent } from "../../components/panel/panel.component";
 
-import { IDetailedPatent, PatentType } from "../../models/patent";
+import { IDetailedPatent, PatentStatus, PatentType } from "../../models/patent";
 
 import { AlertsService } from "../../services/alerts/alerts.service";
 import { DtTranslationService } from "../../services/dt-translation/dt-translation.service";
@@ -26,7 +28,11 @@ import { getDispatchDtOptions } from "./datatables-options/dispatch";
 	standalone: true,
 	imports: [
 		DataTablesModule,
+		DatePipe,
+		LanguageComponent,
 		MatIcon,
+		NgFor,
+		NgIf,
 		PanelComponent
 	],
 	templateUrl: "./details.component.html",
@@ -45,6 +51,8 @@ export class DetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 	public dtTrigger: Subject<ADTSettings> = new Subject();
 	public dtOptions!: ADTSettings;
 
+	public PatentStatus = PatentStatus;
+	public PatentType = PatentType;
 	public header: string = "Carregando dados...";
 	public patent?: IDetailedPatent;
 
@@ -82,8 +90,6 @@ export class DetailsComponent implements OnInit, AfterViewInit, OnDestroy {
 						this.header = "Detalhes da Patente";
 					else if (patent.tipo === PatentType.PROGRAMA)
 						this.header = "Detalhes do Programa";
-
-					console.log(patent);
 
 					this.patent = patent;
 					this.dtOptions.data = patent.despachosPatente;
