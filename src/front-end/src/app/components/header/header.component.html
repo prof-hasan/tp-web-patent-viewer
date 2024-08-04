@@ -17,6 +17,10 @@
 					<img src="../../../assets/logo.png" class="ms-3 me-1">
 				</a>
 			</div>
+
+			<button type="button" class="btn btn-link text-white d-flex align-items-center" (click)="goBack()" *ngIf="!hideBackButton">
+				<mat-icon fontIcon="arrow_back"></mat-icon>
+			</button>
 		</div>
 
 		<div class="navbar-collapse justify-content-between" id="menu" [collapse]="isMenuCollapsed" [isAnimated]="true">
