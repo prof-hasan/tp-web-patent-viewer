@@ -37,3 +37,25 @@
 	- [express-validator](https://express-validator.github.io/docs/)
 
 - Escrita de documentação ao menos para as funções mais importantes e complexas do sistema
+
+## Implementação de Testes Automatizados
+
+Para validação da solução serão implementados testes unitários para garantir o correto funcionamento das rotas do back-end.
+
+Para isso, pretende-se utilizar o **Jest** como framework de testes e o **SuperTest** como ferramenta para realização das requisições HTTP cujas respostas serão validadas.
+
+Por não se tratar de um sistema muito grande, pretende-se implementar um teste unitário para cada uma das rotas da API, sendo elas citadas abaixo:
+
+- **/statistics/status**: obtém a contagem de patentes por tipo e status;
+
+- **/statistics/requests/yearly**: obtém a quantidade de solicitações/depósitos por ano;
+
+- **/statistics/top-inventors/20**: obtém o ranking dos 20 maiores inventores;
+
+- **/statistics/top-holders/20**: obtém o ranking dos 20 maiores titulares;
+
+- **/statistics/recent-requests/20**: obtém as 20 solicitações/depósitos mais recentes;
+
+- **/patents/filter**: realiza uma pesquisa por patentes ou programas de computador;
+
+- **/patents/details/:code**: obtém todas as informações de uma dada patente ou programa de computador com base no parâmetro `:code`.
