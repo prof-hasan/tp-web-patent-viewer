@@ -6,11 +6,20 @@
 
 	- [ESLint](https://eslint.org/) e [EditorConfig](https://editorconfig.org/)
 
+	- As regras específicas podem ser encontradas nos arquivos abaixo:
+
+		- ESLint do back-end: [.eslintrc.json](/.eslintrc.json)
+
+		- ESLint do front-end: [src/front-end/.eslintrc.json](/src/front-end/.eslintrc.json)
+
+		- EditorConfig do projeto todo: [.editorconfig](/.editorconfig)
+
 - Tipagem das estruturas de dados utilizadas, via [JSDoc](https://jsdoc.app/) no back-end e TypeScript no front-end
 
 - Utilização do [ORM Sequelize](https://sequelize.org/) para deixar o sistema facilmente compatível com vários SGBD
 
 	- Criação da estrutura do banco de dados relacional via migrações gerenciadas pelo ORM
+
 	- Documentação da estrutura do banco de dados via [DBML](https://dbml.dbdiagram.io/home/) e [diagrama](https://dbdiagram.io/home)
 
 - Utilização do [PM2](https://pm2.keymetrics.io/) para implantação, garantindo máxima disponibilidade do servidor
