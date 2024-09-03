@@ -20,17 +20,20 @@ export function getTopRankingDtOptions (dtTranslationService: DtTranslationServi
 			data: "nomeVisualizacao",
 			className: "p-2 w-auto align-middle"
 		}, {
-			title: "Qtd. Citações",
+			title: "Patentes",
+			data: "qtdPatentes",
+			className: "p-2 align-middle",
+			width: "115px"
+		}, {
+			title: "Programas de Computador",
+			data: "qtdProgramas",
+			className: "p-2 align-middle",
+			width: "245px"
+		}, {
+			title: "Total de Citações",
 			data: "citacoes",
 			className: "p-2 align-middle",
-			width: "145px"
-		}, {
-			title: "Aparece Em",
-			data: null,
-			className: "p-2 align-middle",
-			width: "235px",
-			orderable: false,
-			searchable: false
+			width: "170px"
 		}],
 		data: [],
 		order: [[0, "asc"]]

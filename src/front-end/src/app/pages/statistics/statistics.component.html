@@ -1,13 +1,21 @@
-<ng-template #citacoesHolder let-data="adtData">
+<ng-template #patentsHolder let-data="adtData">
 	<div>
-		<a [routerLink]="['/search-patents', { holder: data.nomeVisualizacao }]">{{ data.qtdPatentes }} {{ data.qtdPatentes === 1 ? "patente" : "patentes" }}</a> e
+		<a [routerLink]="['/search-patents', { holder: data.nomeVisualizacao }]">{{ data.qtdPatentes }} {{ data.qtdPatentes === 1 ? "patente" : "patentes" }}</a>
+	</div>
+</ng-template>
+<ng-template #softwareHolder let-data="adtData">
+	<div>
 		<a [routerLink]="['/search-softwares', { holder: data.nomeVisualizacao }]">{{ data.qtdProgramas }} {{ data.qtdProgramas === 1 ? "programa" : "programas" }}</a>
 	</div>
 </ng-template>
 
-<ng-template #citacoesInventor let-data="adtData">
+<ng-template #patentsInventor let-data="adtData">
 	<div>
-		<a [routerLink]="['/search-patents', { inventor: data.nomeVisualizacao }]">{{ data.qtdPatentes }} {{ data.qtdPatentes === 1 ? "patente" : "patentes" }}</a> e
+		<a [routerLink]="['/search-patents', { inventor: data.nomeVisualizacao }]">{{ data.qtdPatentes }} {{ data.qtdPatentes === 1 ? "patente" : "patentes" }}</a>
+	</div>
+</ng-template>
+<ng-template #softwareInventor let-data="adtData">
+	<div>
 		<a [routerLink]="['/search-softwares', { inventor: data.nomeVisualizacao }]">{{ data.qtdProgramas }} {{ data.qtdProgramas === 1 ? "programa" : "programas" }}</a>
 	</div>
 </ng-template>
