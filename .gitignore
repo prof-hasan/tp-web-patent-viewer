@@ -1,0 +1,8 @@
+node_modules
+
+!.gitkeep
+
+src/public/*
+!src/public/index.html
+
+src/database/*.backup
