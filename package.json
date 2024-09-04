@@ -8,7 +8,8 @@
 		"front": "cd src/front-end && npm start",
 		"db_create": "sequelize db:create",
 		"db_drop": "sequelize db:drop",
-		"db_migrate": "sequelize db:migrate"
+		"db_migrate": "sequelize db:migrate",
+		"test": "jest --runInBand src/tests"
 	},
 	"author": "Lucas Rassilan Vilanova",
 	"license": "ISC",
@@ -32,16 +33,20 @@
 	},
 	"devDependencies": {
 		"@angular/cli": "^17.1.2",
+		"dotenv-cli": "^7.4.2",
 		"eslint": "^8.27.0",
+		"jest": "^29.7.0",
 		"nodemon": "^2.0.20",
-		"sequelize-cli": "^6.2.0"
+		"sequelize-cli": "^6.2.0",
+		"supertest": "^7.0.0"
 	},
 	"nodemonConfig": {
 		"ignore": [
 			".git",
 			"node_modules/",
 			"front-end/",
-			"public/"
+			"public/",
+			"tests/"
 		]
 	}
 }
