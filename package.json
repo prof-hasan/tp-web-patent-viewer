@@ -45,7 +45,8 @@
 			".git",
 			"node_modules/",
 			"front-end/",
-			"public/"
+			"public/",
+			"tests/"
 		]
 	}
 }
