@@ -1,0 +1,15 @@
+<div class="background"></div>
+
+<block-ui message="Carregando...">
+	<app-header></app-header>
+
+	<div class="d-flex w-100">
+		<ng-scrollbar class="flex-fill">
+			<div class="route-content p-3">
+				<router-outlet></router-outlet>
+			</div>
+
+			<app-footer></app-footer>
+		</ng-scrollbar>
+	</div>
+</block-ui>

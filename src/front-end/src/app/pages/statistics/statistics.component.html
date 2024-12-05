@@ -1,0 +1,94 @@
+<ng-template #patentsHolder let-data="adtData">
+	<div>
+		<a [routerLink]="['/search-patents', { holder: data.nomeVisualizacao }]">{{ data.qtdPatentes }} {{ data.qtdPatentes === 1 ? "patente" : "patentes" }}</a>
+	</div>
+</ng-template>
+<ng-template #softwareHolder let-data="adtData">
+	<div>
+		<a [routerLink]="['/search-softwares', { holder: data.nomeVisualizacao }]">{{ data.qtdProgramas }} {{ data.qtdProgramas === 1 ? "programa" : "programas" }}</a>
+	</div>
+</ng-template>
+
+<ng-template #patentsInventor let-data="adtData">
+	<div>
+		<a [routerLink]="['/search-patents', { inventor: data.nomeVisualizacao }]">{{ data.qtdPatentes }} {{ data.qtdPatentes === 1 ? "patente" : "patentes" }}</a>
+	</div>
+</ng-template>
+<ng-template #softwareInventor let-data="adtData">
+	<div>
+		<a [routerLink]="['/search-softwares', { inventor: data.nomeVisualizacao }]">{{ data.qtdProgramas }} {{ data.qtdProgramas === 1 ? "programa" : "programas" }}</a>
+	</div>
+</ng-template>
+
+<ng-template #statusColumn let-data="adtData">
+	@if (data.status === PatentStatus.EM_ANDAMENTO) {
+		<span class="text-primary fw-medium">EM ANDAMENTO</span>
+	} @else if (data.status === PatentStatus.CONCEDIDO) {
+		<span class="text-success fw-medium">CONCEDIDO</span>
+	} @else if (data.status === PatentStatus.ARQUIVADO) {
+		<span class="text-danger fw-medium">ARQUIVADO</span>
+	}
+</ng-template>
+
+<ng-template #detailsBtn let-data="adtData">
+	<div class="d-flex justify-content-center">
+		<a class="btn btn-primary d-flex p-1" title="Detalhes da solicitação" [routerLink]="'/details/' + data.codigo">
+			<mat-icon fontIcon="read_more"></mat-icon>
+		</a>
+	</div>
+</ng-template>
+
+<div class="container">
+	<app-panel class="d-block mb-3" header="Estatísticas">
+		<div class="row mx-0">
+			<div class="col-12 col-md-6 col-xl-8 px-0">
+				<app-statistics-cards header="Patentes" [statistics]="status?.PATENTE"></app-statistics-cards>
+				<app-statistics-cards header="Programas de Computador" [statistics]="status?.PROGRAMA"></app-statistics-cards>
+				<app-statistics-cards header="Totalização" [statistics]="status?.TOTAL"></app-statistics-cards>
+			</div>
+			<div
+				echarts
+				[options]="statusChartOptions"
+				(chartInit)="statusChart = $event"
+				class="col-12 col-md-6 col-xl-4 ps-3 pe-0 echarts"
+			></div>
+		</div>
+
+		<div
+			echarts
+			[options]="requestsChartOptions"
+			(chartInit)="requestsChart = $event"
+			class="echarts"
+		></div>
+	</app-panel>
+
+	<app-panel class="d-block mb-3" header="Principais Titulares">
+		<table
+			#holdersTable
+			datatable
+			[dtOptions]="dtOptionsHolders!"
+			[dtTrigger]="dtTriggerHolders"
+			class="w-100 row-border table table-bordered"
+		></table>
+	</app-panel>
+
+	<app-panel class="d-block mb-3" header="Principais Criadores e Inventores">
+		<table
+			#inventorsTable
+			datatable
+			[dtOptions]="dtOptionsInventors!"
+			[dtTrigger]="dtTriggerInventors"
+			class="w-100 row-border table table-bordered"
+		></table>
+	</app-panel>
+
+	<app-panel class="d-block mb-3" header="Solicitações Mais Recentes">
+		<table
+			#requestsTable
+			datatable
+			[dtOptions]="dtOptionsRequests!"
+			[dtTrigger]="dtTriggerRequests"
+			class="w-100 row-border table table-bordered"
+		></table>
+	</app-panel>
+</div>

@@ -1,0 +1,5 @@
+@if (languageClass()) {
+	<i class="programming m-1" [ngClass]="languageClass()" [title]="language()"></i>
+} @else {
+	<mat-icon class="programming m-1" fontIcon="code" [title]="language()"></mat-icon>
+}
